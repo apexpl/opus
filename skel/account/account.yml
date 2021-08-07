@@ -1,0 +1,8 @@
+
+profile:
+    username: ~username.lower~
+    email: ~email~
+    repo_alias: ~repo~
+    ssh_key: ~ssh_key_alias~
+    sign_key: ~sign_key_alias~
+

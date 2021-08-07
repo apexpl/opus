@@ -1,0 +1,18 @@
+
+general:
+  name: ~name~
+  access: ~access~
+  type: ~type~
+  price: 0
+  price_recurring: 0
+  price_interval: Y1
+
+acl:
+  trunk: team
+  branches: public
+  releases: maintainers
+  issues: public
+  rfc: team
+
+
+

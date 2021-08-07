@@ -1,0 +1,22 @@
+{
+    "name": "apex/opus", 
+    "description": "Code generation utility for CRUD, models, and more.", 
+    "type": "package",
+    "homepage": "https://apexpl.io",
+    "license": "MIT",
+    "require": {
+        "php": ">=8.0.0",
+        "symfony/inflector": "^5.2",
+        "symfony/string": "^5.2",
+        "symfony/yaml": "^5.2",
+        "apex/db": "^0.2.5"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^9.5"
+    },
+    "autoload": {
+        "psr-4": { 
+            "Apex\\Opus\\": "src/"
+        }
+    }
+}

@@ -1,0 +1,52 @@
+
+account:
+  files:
+    account/account.yml: /accounts/~username~.~repo~.yml
+    account/cert.crt: /certs/~username~.~repo~.crt
+
+package:
+  dirs:
+    - /etc/~alias.title~
+    - /etc/~alias.title~/Migrations
+    - /src/~alias.title~
+    - /tests/~alias.title~
+    - /docs/~alias.title~
+  files:
+    package/package.yml: /etc/~alias.title~/package.yml
+    package/install.sql: /etc/~alias.title~/install.sql
+    package/remove.sql: /etc/~alias.title~/remove.sql
+    package/reset.sql: /etc/~alias.title~/reset.sql
+    package/migrate.php: /etc/~alias.title~/migrate.php
+
+theme:
+  system_copy:
+    theme/views: views/themes/~alias.lower~
+    theme/public: public/themes/~alias.lower~
+ 
+http_controller:
+  files:
+    http_controller.php: /src/HttpControllers/~alias.title~.php
+
+form:
+  files:
+    form.php: /src/~package.title~/Opus/Forms/~alias.title~.php
+
+data_table:
+  files:
+    data_table.php: /src/~package.title~/Opus/DataTables/~alias.title~.php
+
+listener:
+  files:
+    listener.php: /src/~package.title~/Listeners/~alias.title~.php
+
+view:
+  files:
+    view.php: /views/php/~uri~.php
+    view.html: /views/html/~uri~.html
+
+admin_settings:
+  files:
+    codegen/admin_settings/view.php: /views/php/~path~.php
+    codegen/admin_settings/view.html: /views/html/~path~.html
+
+
