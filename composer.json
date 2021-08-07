@@ -9,7 +9,7 @@
         "symfony/inflector": "^5.2",
         "symfony/string": "^5.2",
         "symfony/yaml": "^5.2",
-        "apex/db": "^0.2.5"
+        "apex/db": "^0.3"
     },
     "require-dev": {
         "phpunit/phpunit": "^9.5"
