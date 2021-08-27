@@ -1,7 +1,7 @@
 <?php
 declare(strict_types = 1);
 
-namespace Apex\Views~parent_namespace~;
+namespace Views~parent_namespace~;
 
 use Apex\Svc\View;
 

@@ -3,7 +3,7 @@ declare(strict_types = 1);
 
 namespace Apex\Opus;
 
-use Apex\Svc\Container;
+use Apex\Svc\{Container, Convert};
 
 /**
  * Components
@@ -15,7 +15,8 @@ class Components
      * Constructor
      */
     public function __construct(
-        private Container $cntr
+        private Container $cntr,
+        private Convert $convert
     ) { 
 
     }
@@ -32,8 +33,8 @@ class Components
         }
 
         // Convert case as needed
-        $package = fcase($match[1], 'title');
-        $alias = fcase($match[2], 'title');
+        $package = $this->convert->case($match[1], 'title');
+        $alias = $this->convert->case($match[2], 'title');
 
         // Check for class
         $class_name = "\\App\\$package\\Opus\\" . ucwords($type) . "s\\$alias";

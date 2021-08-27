@@ -4,7 +4,7 @@ declare(strict_types = 1);
 namespace Apex\Opus\Helpers;
 
 use Apex\Db\Interfaces\DbInterface;
-use Apex\Opus\Helpers\DoctrineHelper;
+use Apex\Opus\Helpers\{DoctrineHelper, ForeignKeysHelper};
 
 /**
  * Database handler class.
@@ -34,6 +34,7 @@ class DatabaseHelper
 
         // Go through columns
         $props = [];
+        $has_optional = false;
         foreach ($columns as $alias => $vars) { 
 
             // Get php data type
@@ -58,6 +59,22 @@ class DatabaseHelper
                 default => $def
             };
 
+            // Check for non-blank default
+            if ($def != '') { 
+                $has_optional = true;
+            }
+
+            // Check default again
+            if ($has_optional === true && $def == '') { 
+                $def = match($type) { 
+                    'bool' => 'true',
+                    'int' => '0',
+                    'float' => '0.00',
+                    'string' => "''",
+                    default => 'null'
+                };
+            }
+
             // Set props
             $props[$alias] = [
                 'name' => $alias, 
@@ -68,6 +85,8 @@ class DatabaseHelper
             ];
 
         }
+
+
 
         // Return
         return $props;

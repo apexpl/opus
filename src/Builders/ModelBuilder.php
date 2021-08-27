@@ -3,7 +3,7 @@ declare(strict_types = 1);
 
 namespace Apex\Opus\Builders;
 
-use Apex\Opus\Helpers\DatabaseHelper;
+use Apex\Opus\Helpers\{DatabaseHelper, ForeignKeysHelper};
 
 
 /**
@@ -12,11 +12,15 @@ use Apex\Opus\Helpers\DatabaseHelper;
 class ModelBuilder extends AbstractBuilder
 {
 
+    // Properties
+    private array $generated_files = [];
+
     /**
      * Constructor
      */
     public function __construct(
-        private DatabaseHelper $db_helper
+        private DatabaseHelper $db_helper,
+        private ForeignKeysHelper $foreign_keys_helper
     ) { 
 
     }
@@ -24,7 +28,7 @@ class ModelBuilder extends AbstractBuilder
     /**
      * Build
      */
-    public function build(string $filename, string $rootdir, string $dbtable, string $type = 'php8', bool $with_magic = false):string
+    public function build(string $filename, string $rootdir, string $dbtable, string $type = 'php8', bool $with_magic = false):array
     {
 
         // Get namespace
@@ -45,6 +49,11 @@ class ModelBuilder extends AbstractBuilder
         // Apply properties
         $code = $this->applyProperties($code, $props);
 
+        // Apply foreign keys, if PHP8 type
+        if (str_contains($type, 'php8')) { 
+            $code = $this->foreign_keys_helper->apply($code, $dbtable, dirname("$rootdir/$filename"), $with_magic, $props);
+        }
+
         // Basic replace
         $replace = [
             '~namespace~' => $namespace, 
@@ -54,9 +63,17 @@ class ModelBuilder extends AbstractBuilder
         ];
         $code = strtr($code, $replace);
 
-        // Save file and return
+        // Save file
         file_put_contents("$rootdir/$filename", $code);
-        return $filename;
+        $this->generated_files[] = $filename;
+
+        // Generate any queued models
+        foreach ($this->foreign_keys_helper->queue as $table_name => $filename) { 
+            $this->build($filename, SITE_PATH, $table_name, 'php8', $with_magic);
+        }
+
+        // Return filename
+        return $this->generated_files;
     }
 
     /**

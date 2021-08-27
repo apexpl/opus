@@ -21,9 +21,6 @@ class Opus
         'plural' => ''
     ];
 
-
-    /**
-
     /**
      * Constructor
      */
@@ -54,7 +51,7 @@ class Opus
     /**
      * Build model
      */
-    public function buildModel(string $filename, string $rootdir, string $dbtable, string $type = 'php8', bool $with_magic = false)
+    public function buildModel(string $filename, string $rootdir, string $dbtable, string $type = 'php8', bool $with_magic = false):array
     {
         $builder = Di::make(ModelBuilder::class);
         return $builder->build($filename, $rootdir, $dbtable, $type, $with_magic);
