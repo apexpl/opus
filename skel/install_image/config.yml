@@ -1,0 +1,15 @@
+
+general:
+    name: ~username~/~alias.lower~
+    version: 1.0
+    access: public
+    description: Description of the installation image.
+
+packages:
+    webapp: *
+    users: *
+
+config:
+    core.site_name: "Image Test"
+
+

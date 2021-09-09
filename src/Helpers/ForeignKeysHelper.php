@@ -69,7 +69,8 @@ class ForeignKeysHelper extends AbstractBuilder
             if (!$class_name = $this->tableToClassName($vars['table'], $dirname)) { 
 
                 // Check for creation of new class
-                if (!$class_name = $this->generateClass($vars['table'], $dirname, $with_magic)) { 
+                if (!$class_name = $this->generateClass($vars['table'], $dirname, $with_magic)) {
+                    unset($keys[$column]);
                     continue;
                 }
             }
@@ -81,32 +82,6 @@ class ForeignKeysHelper extends AbstractBuilder
         // Return
         return $keys;
     }
-
-    /**
-     * Apply referenced foreign keys
-     */
-    private function applyReferencedForeignKeys(string $code, string $dbtable, string $dirname, bool $with_magic, array $props):string
-    {
-
-        // Check for code tag
-        if (!preg_match("/<relations_many>(.*?)<\/relations_many>/si", $code, $match)) { 
-            return $code;
-        }
-
-        // Get keys
-        $keys = $this->db->getReferencedForeignKeys($dbtable);
-
-        // Go through keys
-        $final_code = '';
-        foreach ($keys as $foreign_key => $vars) { 
-
-
-        }
-
-        // Return
-        return str_replace($match[0], $final_code, $code);
-    }
-
 
     /**
      * Get referenced foreign keys
@@ -125,6 +100,7 @@ class ForeignKeysHelper extends AbstractBuilder
 
                 // Check for creation of new class
                 if (!$class_name = $this->generateClass($vars['ref_table'], $dirname, $with_magic)) { 
+                    unset($keys[$foreign_key]);
                     continue;
                 }
             }

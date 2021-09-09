@@ -3,45 +3,51 @@ declare(strict_types = 1);
 
 namespace App\~package.title~\Opus\Cli;
 
-use Apex\App\Cli\Cli;
+use Apex\App\Cli\{Cli, CliHelpScreen};
+use Apex\App\Interfaces\Opus\CliCommandInterface;
 
 /**
  * CLI Command -- ./apex ~package.lower~ ~alias.lower~
  */
-class ~alias.title~
+class ~alias.title~ implements CliCommandInterface
 {
 
     /**
      * Process
      */
-    public function process(Cli $cli):void
+    public function process(Cli $cli, array $args):void
     {
 
         // Get CLI arguments
-        list($args, $opt) = $cli->getArgs([]);
+        $opt = $cli->getArgs(['myflag1', 'myflag2']);
 
     }
 
     /**
      * Help
      */
-    public function help(Cli $cli):void
+    public function help(Cli $cli):CliHelpScreen
     {
 
-        $cli->sendHelp(
-            '~alias.phrase~',       // Title
-            '~package.lower~ ~alias.lower~',       // Usage
-            'Description of the command here', 
-            [
-                'param1' => 'Description of first required paramter.'
-            ], [
-                '--flag' => 'Description of an optional flag.'
-            ], [
-                '~package.lower~ ~alias.lower~ example1 example2 --name example'
-            ]
+        $help = new CliHelpScreen(
+            title: '~alias.phrase~',
+            usage: '~package.lower~ ~alias.lower~',
+            description: 'Description of the command here'
         );
 
+        // Add parameters
+        $help->addParam('param1', 'Description of parameter.');
+
+        // Add optional flags
+        $help->addFlag('--some-flag', 'Description of flag.');
+
+        // Add example
+        $help->addExample('./apex ~package.lower~ ~alias.lower~ <param1> [--flat1=...]');
+
+        // Return
+        return $help;
     }
 
 }
+
 

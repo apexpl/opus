@@ -3,13 +3,13 @@ declare(strict_types = 1);
 
 namespace App\~package.title~\Opus\Forms;
 
-use Apex\Opus\Builders\FormFieldsCreator;
-
+use Apex\App\Web\Utils\FormFieldsCreator;
+use Apex\App\Interfaces\Opus\FormInterface;
 
 /**
  * Form - ~alias.title~
  */
-class ~alias.title~
+class ~alias.title~ implements FormInterface
 {
 
     /**
@@ -18,14 +18,8 @@ class ~alias.title~
     public bool $allow_post_values = false;
 
 
-    /**
-     * Constructor
-     */
-    public function __construct(
-        private FormFieldsCreator $creator
-    ) { 
-
-    }
+    #[Inject(FormFieldsCreator::class)]
+    private FormFieldsCreator $creator;
 
     /**
      * Get form fields.

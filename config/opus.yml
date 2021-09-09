@@ -17,6 +17,16 @@ package:
     package/remove.sql: /etc/~alias.title~/remove.sql
     package/reset.sql: /etc/~alias.title~/reset.sql
     package/migrate.php: /etc/~alias.title~/migrate.php
+    package/Readme.md: /docs/~alias.title~/Readme.md
+
+install_image:
+  dirs:
+    - /images/~alias.lower~
+  files:
+    install_image/config.yml: /images/~alias.lower~/config.yml
+    install_image/image.php: /images/~alias.lower~/image.php
+    install_image/install.sql: /images/~alias.lower~/install.sql
+    install_image/Readme.md: /images/~alias.lower~/Readme.md
 
 theme:
   system_copy:
@@ -35,6 +45,52 @@ data_table:
   files:
     data_table.php: /src/~package.title~/Opus/DataTables/~alias.title~.php
 
+ajax:
+  files:
+    ajax.php: /src/~package.title~/Opus/Ajax/~alias.title~.php
+
+auto_complete:
+  files:
+    auto_complete.php: /src/~package.title~/Opus/AutoCompletes/~alias.title~.php
+
+html_function:
+  files:
+    html_function.php: /src/~package.title~/Opus/HtmlFunctions/~alias.title~.php
+    html_function.html: /src/~package.title~/Opus/HtmlFunctions/~alias.title~.html
+
+modal:
+  files:
+    modal.php: /src/~package.title~/Opus/Modals/~alias.title~.php
+    modal.html: /src/~package.title~/Opus/Modals/~alias.title~.html
+
+crontab:
+  files:
+    crontab.php: /src/~package.title~/Opus/Crontabs/~alias.title~.php
+
+dashboard_item:
+  files:
+    dashboard_item.php: /src/~package.title~/Opus/DashboardItems/~alias.title~.php
+
+graph:
+  files:
+    graph.php: /src/~package.title~/Opus/Graphs/~alias.title~.php
+
+cli:
+  files:
+    cli.php: /src/~package.title~/Opus/Cli/~alias.title~.php
+
+
+tab_control:
+  dirs:
+    - /src/~package.title~/Opus/TabControls/~alias.title~
+  files:
+    tab_control.php: /src/~package.title~/Opus/TabControls/~alias.title~.php
+
+tab_page:
+  files:
+    tab_page.php: /src/~package.title~/Opus/TabControls/~parent_package.title~_~parent_alias.title~/~alias.title~.php
+    tab_page.html: /src/~package.title~/Opus/TabControls/~parent_package.title~_~parent_alias.title~/~alias.title~.html
+
 listener:
   files:
     listener.php: /src/~package.title~/Listeners/~alias.title~.php
@@ -48,5 +104,9 @@ admin_settings:
   files:
     codegen/admin_settings/view.php: /views/php/~path~.php
     codegen/admin_settings/view.html: /views/html/~path~.html
+
+test:
+  files:
+    test.php: /tests/~package.title~/~alias.title~.php
 
 

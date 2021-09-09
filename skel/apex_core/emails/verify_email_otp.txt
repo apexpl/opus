@@ -1,0 +1,12 @@
+
+Hi there,
+
+Thank you for registering a ~site_name~ account.  To verify your e-mail address, please enter the below code into the client area:
+
+    Verification Code: ~armor_code~
+
+Thank you,
+~site_name~
+
+
+

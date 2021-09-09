@@ -1,0 +1,11 @@
+
+    private array $templates = [
+        'initial_password.txt' => '',
+        'reset_password_email.txt' => '',
+        'reset_password_email_otp.txt' => '',
+        'two_factor_email.txt' => '',
+        'two_factor_email_otp.txt' => '',
+        'verify_email.txt' => '',
+        'verify_email_otp.txt' => 'CkhpIHRoZXJlLAoKVGhhbmsgeW91IGZvciByZWdpc3RlcmluZyBhIH5zaXRlX25hbWV+IGFjY291bnQuICBUbyB2ZXJpZnkgeW91ciBlLW1haWwgYWRkcmVzcywgcGxlYXNlIGVudGVyIHRoZSBiZWxvdyBjb2RlIGludG8gdGhlIGNsaWVudCBhcmVhOgoKICAgIFZlcmlmaWNhdGlvbiBDb2RlOiB+YXJtb3JfY29kZX4KClRoYW5rIHlvdSwKfnNpdGVfbmFtZX4KCgoK'
+    ];
+

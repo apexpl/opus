@@ -14,7 +14,7 @@ class ~alias.lower~
     /**
      * Render
      */
-    public function render(View $view)
+    public function render(View $view):void
     {
 
     }
