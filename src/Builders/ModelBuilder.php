@@ -50,7 +50,8 @@ class ModelBuilder extends AbstractBuilder
         $code = $this->applyProperties($code, $props);
 
         // Apply foreign keys, if PHP8 type
-        if (str_contains($type, 'php8')) { 
+        if (str_contains($type, 'php8')) {
+            ForeignKeysHelper::$tbl_created[$dbtable] = $namespace . "\\" . $class_name;
             $code = $this->foreign_keys_helper->apply($code, $dbtable, dirname("$rootdir/$filename"), $with_magic, $props);
         }
 
@@ -68,7 +69,7 @@ class ModelBuilder extends AbstractBuilder
         $this->generated_files[] = $filename;
 
         // Generate any queued models
-        foreach ($this->foreign_keys_helper->queue as $table_name => $filename) { 
+        foreach (ForeignKeysHelper::$queue as $table_name => $filename) { 
             $this->build($filename, SITE_PATH, $table_name, 'php8', $with_magic);
         }
 

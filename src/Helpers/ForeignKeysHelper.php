@@ -9,6 +9,7 @@ use Apex\Container\Di;
 use Apex\App\Base\Model\BaseModel;
 use Apex\Opus\Builders\{AbstractBuilder, ModelBuilder};
 use Apex\Db\Interfaces\DbInterface;
+use redis;
 
 /**
  * Foreign Keys
@@ -18,7 +19,9 @@ class ForeignKeysHelper extends AbstractBuilder
 
     // Properties
     private string $use_declarations = '';
-    public array $queue = [];
+    public static array $queue = [];
+    public static array $tbl_created = [];
+    public static array $tbl_skipped = [];
 
     /**
      * Constructor
@@ -26,6 +29,7 @@ class ForeignKeysHelper extends AbstractBuilder
     public function __construct(
         private DbInterface $db,
         private OpusHelper $opus_helper,
+        private redis $redis,
         Cli $cli
     ) { 
         $this->cli = $cli;
@@ -39,7 +43,7 @@ class ForeignKeysHelper extends AbstractBuilder
 
         // Initialize
         $this->use_declarations = '';
-        $this->queue = [];
+        ForeignKeysHelper::$queue = [];
 
         // Get keys
         $keys = $this->getForeignKeys($dbtable, $dirname, $with_magic, $props);
@@ -119,33 +123,31 @@ class ForeignKeysHelper extends AbstractBuilder
     private function tableToClassName(string $table_name, string $entity_dir):?string
     {
 
+        // Check skipped and created
+        if ($table_name == 'armor_users' || in_array($table_name, ForeignKeysHelper::$tbl_skipped)) { 
+            return null;
+        } elseif (isset(ForeignKeysHelper::$tbl_created[$table_name])) { 
+            return ForeignKeysHelper::$tbl_created[$table_name];
+        }
+
         // Initialize
         $class_name = null;
-        $files = scandir($entity_dir);
+        $classes = $this->redis->smembers("config:interfaces:Apex\\App\\Interfaces\\BaseModelInterface");
 
-        // Go through files
-        foreach ($files as $file) { 
-
-            // Skip, if not .php file
-            if (!str_ends_with($file, '.php')) { 
-                continue;
-            }
-            $tmp_file = str_replace(SITE_PATH, '', "$entity_dir/$file");
+        // Go through classes
+        foreach ($classes as $class) {
 
             // Load object
-            $class_name = $this->opus_helper->pathToNamespace($tmp_file);
-            $obj = new \ReflectionClass($class_name);
+            $obj = new \ReflectionClass($class);
 
-            // Skip, if not model
-            if ($obj->getExtensionName() != BaseModel::class) { 
+            // Check class
+            if (!$obj->hasProperty('dbtable')) { 
                 continue;
-            } elseif (!$prop = $obj->getProperty('dbtable')) { 
-                continue;
-            } elseif ($prop->getValue() != $table_name) { 
+            } elseif ($obj->getProperty('dbtable')->getDefaultValue() != $table_name) {
                 continue;
             }
 
-            $class_name = $obj->getNamespaceName();
+            $class_name = $class;
             break;
         }
 
@@ -159,27 +161,37 @@ class ForeignKeysHelper extends AbstractBuilder
     private function generateClass(string $table_name, string $entity_dir, bool $with_magic):?string
     {
 
+        // Check skipped and created
+        if ($table_name == 'armor_users' || in_array($table_name, ForeignKeysHelper::$tbl_skipped)) { 
+            return null;
+        } elseif (isset(ForeignKeysHelper::$tbl_created[$table_name])) { 
+            return ForeignKeysHelper::$tbl_created[$table_name];
+        }
+
         // Confirm creation
-        if (!$this->cli->getConfirm("A foreign key relationship with the table '$table_name' was found, but no model class was found.  Would you like to generate one?")) { 
+        if (!$this->cli->getConfirm("A foreign key relationship with the table '$table_name' was found, but no model class was found.  Would you like to generate one?", 'y')) { 
+            ForeignKeysHelper::$tbl_skipped[] = $table_name;
             return null;
         }
 
-        // Get class name
-        $filename = $this->applyFilter($table_name, 'single');
+        // Get name
+        $name = preg_replace("/^(.+?)_/", "", $table_name);
+        $filename = $this->applyFilter($name, 'single');
         $filename = $this->applyFilter($filename, 'title') . '.php';
-        $filename = str_replace(SITE_PATH, '', "$entity_dir/$filename");
+        $filename = str_replace(SITE_PATH . '/src/', '', "$entity_dir/$filename");
 
-        // Build the model
-        //$builder = Di::make(ModelBuilder::class);
-        //$builder->build($filename, SITE_PATH, $table_name, 'php8', $with_magic);
+        // Confirm filename
+        $this->cli->send("Please enter the filepath relative to the /src/ directory where you would like the new model class for '$table_name' saved.  Leave blank and press enter to accept the default value provided.\r\n\r\n");
+        $filename = $this->cli->getInput("Filepath of Model [$filename]: ", $filename);
+        $filename = $this->opus_helper->parseFilename($filename);
 
         // Add to queue
-        $this->queue[$table_name] = $filename;
+        ForeignKeysHelper::$queue[$table_name] = $filename;
 
         // Get class name, and return
         $class_name = $this->opus_helper->pathToNamespace($filename);
+        ForeignKeysHelper::$tbl_created[$table_name] = $class_name;
         return $class_name;
-
     }
 
     /**
@@ -206,6 +218,7 @@ class ForeignKeysHelper extends AbstractBuilder
 
         // Go through refereced keys
         foreach ($referenced_keys as $foreign_key => $vars) { 
+
             if (str_ends_with($vars['type'], 'many')) {
                 $many_code .= $this->generateCode($many_match[1], $vars['ref_table'], $vars['class_name'], $vars['type'], $foreign_key);
             } else {
@@ -233,12 +246,13 @@ class ForeignKeysHelper extends AbstractBuilder
 
         // Initialize replace
         $replace = [
-            '~get_phrase~' => $this->applyFilter($alias, 'phrase'),
+            '~get_phrase~' => $this->applyFilter($short_name, 'phrase'),
             '~short_name~' => $short_name,
             '~name~' => $alias,
             '~foreign_key~' => $foreign_key
         ];
         $name = rtrim(rtrim($alias, 'id'), '_');
+        $name = $short_name;
 
         // Set variables based on type
         if (str_ends_with($type, 'many')) { 

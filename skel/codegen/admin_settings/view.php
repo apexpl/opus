@@ -29,7 +29,7 @@ class ~class_name~
 
         // Update config vars
         foreach ($vars as $var) { 
-            $app->setConfig('~package.lower~.' . $var, $app->post($var));
+            $app->setConfigVar('~package.lower~.' . $var, $app->post($var));
         }
 
         // Callout

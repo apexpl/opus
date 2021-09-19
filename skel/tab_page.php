@@ -3,6 +3,7 @@ declare(strict_types = 1);
 
 namespace App\~package.title~\Opus\TabControls\~parent_package.title~_~parent_alias.title~;
 
+use Apex\Svc\{App, View};
 use Apex\App\Interfaces\Opus\TabPageInterface;
 
 /**
@@ -10,6 +11,12 @@ use Apex\App\Interfaces\Opus\TabPageInterface;
  */
 class ~alias.title~ implements TabPageInterface
 {
+
+    #[Inject(App::class)]
+    private App $app;
+
+    #[Inject(View::class)]
+    private View $view;
 
     /**
      * Class name of the parent tab control.

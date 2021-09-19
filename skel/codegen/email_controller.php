@@ -3,14 +3,15 @@ declare(strict_types = 1);
 
 namespace ~namespace~;
 
-use Apex\Mercury\Email\EmailContact;
-use Apex\App\Base\Web\Utils\FormFieldsCreator;
+use Apex\App\Base\Web\Utils\FormBuilder;
 use Apex\App\Interfaces\EmailNotificationControllerInterface;
+use Apex\App\Interfaces\UserInterface;
+use Apex\Mercury\Email\{EmailContact, EmailContactCollection};
 
 /**
  * ~alias.title~ E-Mail Notification Controller
  */
-class ~alias.title~ implements EmailNotificationControllerInterface
+class ~class_name~ implements EmailNotificationControllerInterface
 {
 
     /**
@@ -26,12 +27,13 @@ class ~alias.title~ implements EmailNotificationControllerInterface
      * e-mail notification with this controller, and allow the 
      * administrator to define the conditionals of the e-mail.
      */
-    public function getConditionFormFields(FormFieldsCreator $creator):array
+    public function getConditionFormFields(FormBuilder $builder):array
     {
 
         // Generate form fields
-        $fields = [];
-        $fields['is_active'] = $creator->boolean();
+        $fields = [
+            'is_active' => $builder->boolean()
+        ];
 
         // Return
         return $fields;
@@ -72,7 +74,7 @@ class ~alias.title~ implements EmailNotificationControllerInterface
     {
 
         $fields = [];
-        $fields['Some Category' = [
+        $fields['Some Category'] = [
             'somecat-id' => 'ID#',
             'somecat-amount' => 'Amount',
             'somecat-name' => 'Name'
@@ -110,7 +112,7 @@ class ~alias.title~ implements EmailNotificationControllerInterface
      * This should return the sender name and e-mail address as a 
      * EmailContact object.  Otherwise, return null.
      */
-    public function getSender(string $sender, string $uuid, array $data = []):?EmailContact
+    public function getSender(string $sender, UserInterface $user, array $data = []):?EmailContact
     {
         return null;
     }
@@ -122,7 +124,7 @@ class ~alias.title~ implements EmailNotificationControllerInterface
      * This should return the recipient name and e-mail address as a 
      * EmailContact object.  Otherwise, return null.
      */
-    public function getRecipient(string $recipient, string $uuid, array $data = []):?EmailContact
+    public function getRecipients(string $recipient, UserInterface $user, array $data = []):?EmailContactCollection
     {
         return null;
     }
@@ -144,11 +146,21 @@ class ~alias.title~ implements EmailNotificationControllerInterface
      * If necessary, you can return the Cc e-mail address of the message here.  
      * Otherwise, return null.
      */
-    public function getCc(array $data = []):?string
+    public function getCc(array $data = []):?array
     {
         return null;
     }
 
+    /**
+     * Get bcc
+     *
+     * If necessary, you can return the bcc e-mail address of the message here.  
+     * Otherwise, return null.
+     */
+    public function getBcc(array $data = []):?array
+    {
+        return null;
+    }
 }
 
 

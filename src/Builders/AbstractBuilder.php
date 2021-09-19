@@ -119,9 +119,9 @@ class AbstractBuilder
 
             // Check for one result
             if (is_array($results) && count($results) == 1) { 
-                return $results[0];
+                return preg_replace("/ss$/", "", $results[0]);
             } elseif (!is_array($results)) { 
-                return $results;
+                return preg_replace("/ss$/", "", $results);
             }
 
             // Create options

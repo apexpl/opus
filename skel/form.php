@@ -3,7 +3,7 @@ declare(strict_types = 1);
 
 namespace App\~package.title~\Opus\Forms;
 
-use Apex\App\Web\Utils\FormFieldsCreator;
+use Apex\App\Base\Web\Utils\FormBuilder;
 use Apex\App\Interfaces\Opus\FormInterface;
 
 /**
@@ -18,8 +18,8 @@ class ~alias.title~ implements FormInterface
     public bool $allow_post_values = false;
 
 
-    #[Inject(FormFieldsCreator::class)]
-    private FormFieldsCreator $creator;
+    #[Inject(FormBuilder::class)]
+    private FormBuilder $builder;
 
     /**
      * Get form fields.
@@ -28,12 +28,13 @@ class ~alias.title~ implements FormInterface
     {
 
         // Initialize
-        $creator = $this->creator;
+        $builder = $this->builder;
 
         // Set form fields
         $form_fields = [
-            'full_name' => $creator->textbox(], 
-            'submit' => $creator->createOrUpdateButton('~alias.title~', $attr)
+            'is_active' => $builder->boolean(),
+            'full_name' => $builder->textbox()->required()->placeholder('Sample...'),
+            'submit' => $builder->createOrUpdateButton('~alias.title~', $attr)
         ];
 
         // Return
