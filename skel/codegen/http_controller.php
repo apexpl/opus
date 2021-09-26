@@ -1,7 +1,7 @@
 <?php
 declare(strict_types = 1);
 
-namespace App\HttpControllers;
+namespace ~namespace~;
 
 use Apex\Svc\View;
 use Nyholm\Psr7\Response;
@@ -11,7 +11,7 @@ use Psr\Http\Server\{MiddlewareInterface, RequestHandlerInterface};
 /**
  * Http Controller - ~alias~
  */
-class ~alias.title~ implements MiddlewareInterface
+class ~class_name~ implements MiddlewareInterface
 {
 
     #[Inject(View::class)]

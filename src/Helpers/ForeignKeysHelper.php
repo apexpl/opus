@@ -138,6 +138,9 @@ class ForeignKeysHelper extends AbstractBuilder
         foreach ($classes as $class) {
 
             // Load object
+            if (!class_exists($class)) {
+                continue;
+            }
             $obj = new \ReflectionClass($class);
 
             // Check class

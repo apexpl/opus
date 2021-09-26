@@ -65,7 +65,8 @@ class AbstractBuilder
 
             // Check alias
             if (!isset($vars[$alias])) { 
-                throw new OpusParamNotExistsException("The parameter does not exist while converting string, $alias, string: $string");
+                continue;
+                //throw new OpusParamNotExistsException("The parameter does not exist while converting string, $alias, string: $string");
             }
             $word = $vars[$alias];
 

@@ -3,7 +3,7 @@ declare(strict_types = 1);
 
 namespace Apex\Opus;
 
-use Apex\Opus\Builders\{Builder, Remover, ModelBuilder, ClassBuilder};
+use Apex\Opus\Builders\{Builder, Remover, ModelBuilder, ClassBuilder, CrudBuilder};
 use Apex\Db\Interfaces\DbInterface;
 use Apex\Container\Di;
 use Symfony\Component\String\UnicodeString;
@@ -64,6 +64,15 @@ class Opus
     {
         $builder = Di::make(ClassBuilder::class);
         return $builder->build($type, $filename, $item_class, $rootdir);
+    } 
+
+    /**
+     * Build CRUD
+     */
+    public function buildCrud(string $filename, string $dbtable, string $view, bool $with_magic, string $rootdir):array
+    {
+        $builder = Di::make(CrudBuilder::class);
+        return $builder->build($filename, $dbtable, $view, $with_magic, $rootdir);
     } 
 
 

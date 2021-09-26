@@ -3,6 +3,7 @@ declare(strict_types = 1);
 
 namespace App\~package.title~\Opus\Forms;
 
+use Apex\Svc\Db;
 use Apex\App\Base\Web\Utils\FormBuilder;
 use Apex\App\Interfaces\Opus\FormInterface;
 
@@ -21,6 +22,9 @@ class ~alias.title~ implements FormInterface
     #[Inject(FormBuilder::class)]
     private FormBuilder $builder;
 
+    #[Inject(Db::class)]
+    private Db $db;
+
     /**
      * Get form fields.
      */
@@ -31,12 +35,7 @@ class ~alias.title~ implements FormInterface
         $builder = $this->builder;
 
         // Set form fields
-        $form_fields = [
-            'is_active' => $builder->boolean(),
-            'full_name' => $builder->textbox()->required()->placeholder('Sample...'),
-            'submit' => $builder->createOrUpdateButton('~alias.title~', $attr)
-        ];
-
+~form_code~
         // Return
         return $form_fields;
     }
@@ -48,7 +47,7 @@ class ~alias.title~ implements FormInterface
     {
 
         // Get row
-        if (!$row = $this->db->getIdRow('~alias.lower~', $record_id)) { 
+        if (!$row = $this->db->getIdRow('~dbtable~', $record_id)) { 
             $row = [];
         }
 

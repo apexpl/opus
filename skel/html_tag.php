@@ -1,7 +1,7 @@
 <?php
 declare(strict_types = 1);
 
-namespace ~namespace~;
+namespace App\~package.title~\Opus\Tags;
 
 use Apex\Syrus\Parser\StackElement;
 use Apex\Syrus\Interfaces\TagInterface;

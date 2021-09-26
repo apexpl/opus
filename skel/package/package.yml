@@ -1,6 +1,6 @@
 
 general:
-  name: ~name~
+  description: ~name~
   access: ~access~
   type: ~type~
   price: 0

@@ -4,7 +4,7 @@ $files = scandir(__DIR__);
 $code = "\n    private array \$templates = [\n";
 
 foreach ($files as $file) { 
-    if (in_array($file, ['.', '..', 'out.txt', 'out.php'])) { 
+    if (in_array($file, ['.', '..', 'out.txt', 'out.php', 'emails'])) { 
         continue;
         }
 

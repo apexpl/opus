@@ -3,7 +3,7 @@ declare(strict_types = 1);
 
 namespace App\~package.title~\Opus\DataTables;
 
-use Apex\Svc\{App, Db};
+use Apex\Svc\{App, Db, Convert};
 use Apex\App\Interfaces\Opus\DataTableInterface;
 
 /**
@@ -14,7 +14,7 @@ class ~alias.title~ implements DataTableInterface
 
     // Columns
     public array $columns = [
-        'id' => 'ID'
+~columns~
     ];
     public array $sortable = ['id'];
 
@@ -41,7 +41,8 @@ class ~alias.title~ implements DataTableInterface
     public function __construct(
         private array $attr, 
         private App $app, 
-        private Db $db
+        private Db $db,
+        private Convert $convert
     ) { 
 
     }
@@ -54,9 +55,9 @@ class ~alias.title~ implements DataTableInterface
 
         // Get total
         if ($search_term != '') { 
-            $total = $this->db->getField("SELECT count(*) FROM ~package.lower~_~alias.lower~ WHERE some_column LIKE %ls", $search_term);
+            $total = $this->db->getField("SELECT count(*) FROM ~dbtable~ WHERE some_column LIKE %ls", $search_term);
         } else { 
-            $total = $this->db->getField("SELECT count(*) FROM ~package.lower~_~alias.lower~");
+            $total = $this->db->getField("SELECT count(*) FROM ~dbtable~");
         }
 
         // Return
@@ -73,9 +74,9 @@ class ~alias.title~ implements DataTableInterface
 
         // Get rows
         if ($search_term != '') { 
-        $rows = $this->db->query("SELECT * FROM ~package.lower~_~alias.lower~ WHERE some_column LIKE %ls ORDER BY $order_by LIMIT $start,$this->rows_per_page", $search_term);
+        $rows = $this->db->query("SELECT * FROM ~dbtable~ WHERE some_column LIKE %ls ORDER BY $order_by LIMIT $start,$this->rows_per_page", $search_term);
         } else { 
-            $rows = $this->db->query("SELECT * FROM ~package.lower~_~alias.lower~ ORDER BY $order_by LIMIT $start,$this->rows_per_page");
+            $rows = $this->db->query("SELECT * FROM ~dbtable~ ORDER BY $order_by LIMIT $start,$this->rows_per_page");
         }
 
         // Go through rows
@@ -94,7 +95,7 @@ class ~alias.title~ implements DataTableInterface
     public function formatRow(array $row):array
     {
 
-
+~format_code~
         // Return
         return $row;
     }

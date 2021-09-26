@@ -4,6 +4,7 @@ declare(strict_types = 1);
 namespace Apex\Opus\Builders;
 
 use Apex\Opus\Opus;
+use Apex\Opus\Builders\FormBuilder;
 use Apex\App\Cli\Cli;
 use Symfony\Component\Process\Process;
 
@@ -18,7 +19,8 @@ class Builder extends AbstractBuilder
      */
     public function __construct(
         Opus $opus, 
-        Cli $cli
+        Cli $cli,
+        private FormBuilder $form_builder
     ) { 
         $this->opus = $opus;
         $this->cli = $cli;
@@ -29,6 +31,12 @@ class Builder extends AbstractBuilder
      */
     public function build(string $comp_type, string $rootdir, array $vars):array
     {
+
+        // Get form code, if needed
+        if ($comp_type == 'form') {
+            $dbtable = $vars['dbtable'] ?? '';
+            $vars['form_code'] = $this->form_builder->getCode($dbtable);
+        }
 
         // Get component
         $def = $this->getComponentDefinition($comp_type);

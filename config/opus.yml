@@ -58,6 +58,10 @@ html_function:
     html_function.php: /src/~package.title~/Opus/HtmlFunctions/~alias.title~.php
     html_function.html: /src/~package.title~/Opus/HtmlFunctions/~alias.title~.html
 
+html_tag:
+  files:
+    html_tag.php: /src/~package.title~/Opus/Tags/t_~alias.lower~.php
+
 modal:
   files:
     modal.php: /src/~package.title~/Opus/Modals/~alias.title~.php
@@ -108,5 +112,12 @@ admin_settings:
 test:
   files:
     test.php: /tests/~package.title~/~alias.title~.php
+
+crud_views:
+  files:
+    crud/view.html: /views/html/~view_path~.html
+    crud/view.php: /views/php/~view_path~.php
+    crud/view_manage.html: /views/html/~view_path~_manage.html
+    crud/view_manage.php: /views/php/~view_path~_manage.php
 
 
