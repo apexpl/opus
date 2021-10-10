@@ -9,7 +9,7 @@ use ~model_namespace~\~model_class_name~;
 /**
  * Render the template.
  */
-class ~alias_plural.lower~
+class ~class_name~
 {
 
     /**
@@ -26,7 +26,7 @@ class ~alias_plural.lower~
             ]);
 
             // Callout
-            $view->addCallout("Successfully created new ~alias_single.lower~");
+            $view->addCallout("Successfully created new ~alias_single.phrase~");
 
         // Update ~alias_single.lower~
         } elseif ($app->getAction() == 'update') {
@@ -42,7 +42,7 @@ class ~alias_plural.lower~
             ]);
 
             // Add callout
-            $view->addCallout("Successfully updated ~alias_single.lower~");
+            $view->addCallout("Successfully updated ~alias_single.phrase~");
         }
 
     }

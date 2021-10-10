@@ -80,7 +80,7 @@ class FormBuilder extends AbstractBuilder
 
         // Add submit button
         $name = preg_match("/^.+_(.+)$/", $dbtable, $m) ? $m[1] : $dbtable;
-        $name = $this->applyFilter($name, 'title');
+        $name = $this->applyFilter($this->applyFilter($name, 'single'), 'title');
         $code .= "            'submit' => \$builder->createOrUpdateButton('$name', \$attr)\n";
 
         // Finish code, and return

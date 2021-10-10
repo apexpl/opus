@@ -9,7 +9,7 @@ use ~model_namespace~\~model_class_name~;
 /**
  * Render the template.
  */
-class ~alias_plural.lower~_manage
+class ~class_name~_manage
 {
 
     /**

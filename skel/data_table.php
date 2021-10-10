@@ -29,7 +29,7 @@ class ~alias.title~ implements DataTableInterface
 
     // Delete button
     public string $delete_button = 'Delete Checked ~alias.phrase.plural~';
-    public string $delete_dbtable = '~package.lower~_~alias.lower~';
+    public string $delete_dbtable = '~dbtable~';
     public string $delete_dbcolumn = 'id';
 
     /**
