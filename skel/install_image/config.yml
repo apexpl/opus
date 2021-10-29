@@ -6,8 +6,8 @@ general:
     description: Description of the installation image.
 
 packages:
-    webapp: *
-    users: *
+    webapp: latest
+    users: latest
 
 config:
     core.site_name: "Image Test"
