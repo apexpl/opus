@@ -17,8 +17,10 @@ use Symfony\Component\String\Inflector\EnglishInflector;
 class AbstractBuilder
 {
 
-    // Properties
+    #[Inject(Opus::class)]
     protected Opus $opus;
+
+    #[Inject(Cli::class)]
     protected Cli $cli;
 
     /**

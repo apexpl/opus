@@ -1,4 +1,11 @@
 
+####################
+# General
+#
+# 'access' accepted values:  public, commercial, private
+# 'price_interval' is one letter followed by a number.
+#    Y=year, M=month, W=week, D=day (eg. M3 = 3 months, Y1 = 1 year, et al)
+####################
 general:
   description: ~name~
   access: ~access~
@@ -7,6 +14,12 @@ general:
   price_recurring: 0
   price_interval: Y1
 
+####################
+# ACL controls for repository
+#
+# Accepted values for all are:  public, team, maintainers
+# trunk = main / master branch
+####################
 acl:
   trunk: team
   branches: public
@@ -14,5 +27,18 @@ acl:
   issues: public
   rfc: team
 
+####################
+# CI Pipeline
+#
+# 'phpunit' accepted values: off, strict, flex (ie. ignore warnings / skipped)
+####################
+pipeline:
+  phpunit: off
+  phpstan:
+    level: 0
+    fail_on_ignoreable: false
+  phpcs:
+    severity: 0
+    fail_on_warning: false
 
 

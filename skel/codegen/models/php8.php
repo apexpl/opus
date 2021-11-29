@@ -1,5 +1,5 @@
 <?php
-declare(strict_types = 1);
+declare(strict_types=1);
 
 namespace ~namespace~;
 
@@ -24,7 +24,7 @@ class ~class_name~ extends BaseModel
      */
     public function __construct(
 <properties>
-        protected ~null~~type~ $~name~~default~, 
+        protected ~null~~type~ $~name~~default~,
 </properties>
     ) { 
 

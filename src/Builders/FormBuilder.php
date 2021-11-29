@@ -98,7 +98,7 @@ class FormBuilder extends AbstractBuilder
         $code = "        \$form_fields = [\n";
         $code .= "            'is_active' => \$builder->boolean(),\n";
         $code .= "            'full_name' => \$builder->textbox()->required()->placeholder('Sample...'),\n";
-        $code .= "            'submit' => \$builder->createOrUpdateButton('~alias.title~', $attr)\n";
+        $code .= "            'submit' => \$builder->createOrUpdateButton('~alias.title~', \$attr)\n";
         $code .= "        ];\n";
 
         // Return

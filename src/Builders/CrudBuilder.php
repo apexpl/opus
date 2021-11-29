@@ -118,7 +118,6 @@ class CrudBuilder extends AbstractBuilder
         $db = Di::get(DbInterface::class);
         $primary_key = $db->getPrimaryKey($dbtable);
 
-
         // GO through properties
         foreach ($props as $alias => $vars) {
 
@@ -128,8 +127,10 @@ class CrudBuilder extends AbstractBuilder
             }
 
             // Add to insert / update code
-            $code['insert_code'] .= "                '$alias' => \$app->post('$alias'),\n";
-            $code['update_code'] .= "                '$alias' => \$app->post('$alias'),\n";
+            if ($vars['type'] != 'DateTime') {
+                $code['insert_code'] .= "                '$alias' => \$app->post('$alias'),\n";
+                $code['update_code'] .= "                '$alias' => \$app->post('$alias'),\n";
+            }
 
             // Skip, if needed
             if ($vars['type'] == 'bool') {
@@ -143,7 +144,7 @@ class CrudBuilder extends AbstractBuilder
 
             // Add to format code
             if ($vars['type'] == 'DateTime') {
-                $code['format_code'] .= "        \$row['$alias'] = \$row['$alias'] === null ? '' : \$this->convert->case(\$row['$alias'], true);\n";
+                $code['format_code'] .= "        \$row['$alias'] = \$row['$alias'] === null ? '' : \$this->convert->date(\$row['$alias'], true);\n";
             } elseif ($vars['type'] == 'float') {
                 $code['format_code'] .= "        \$row['$alias'] = \$this->convert->money(\$row['$alias']);\n";
             } elseif ($vars['type'] == 'bool') {

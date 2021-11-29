@@ -111,7 +111,7 @@ admin_settings:
 
 test:
   files:
-    test.php: /tests/~package.title~/~alias.title~.php
+    test.php: /tests/~package.title~/~alias.title~Test.php
 
 crud_views:
   files:
