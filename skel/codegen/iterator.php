@@ -17,16 +17,16 @@ class ~class_name~ extends BaseIterator
      *
      * @var string
      */
-    protected static string $item_class = ~item_class~;
+    protected static string $item_class = ~model_name~::class;
 
     /**
      * Constructor
      */
     public function __construct(
-        array $items
-    ) { 
+        array $items = []
+    ) {
         parent::__construct($items);
-        }
+    }
 
 }
 

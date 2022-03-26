@@ -20,7 +20,7 @@ class ClassBuilder extends AbstractBuilder
 
         // Parse model class
         $parts = explode("\\", $item_class);
-        $model_name = count($parts) > 0 ? array_pop($parts) : 'array';
+        $model_name = count($parts) > 0 ? array_pop($parts) : $item_class;
 
         // Get code
         $code = file_get_contents(__DIR__ . '/../../skel/codegen/' . $type . '.php');

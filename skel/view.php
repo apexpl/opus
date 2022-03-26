@@ -13,30 +13,14 @@ class ~alias.lower~
 {
 
     /**
-     * Render.  This method will be called with every view 
- * regardless of the HTTP method.
+     * Render - This method will be called everytime the view is rendered, regardless of HTTP method.
+     * You may also use post(), get(), delete(), et al. methods which only execute for that specific HTTP verb.
+     * All methods support dependency injection, so you can put any desired dependencies within the parameter list.
      */
     public function render(View $view, App $app):void
     {
 
     }
 
-    /**
-     * Get.  Will only be called when the HTTP method is GET.
-     */
-    public function get(View $view, App $app):void
-    {
-
-    }
-
-    /**
-     * Post.  Will only be called when the HTTP method is POST.
-     */
-    public function post(View $view, App $app):void
-    {
-
-    }
-
 }
-
 
