@@ -255,7 +255,7 @@ class ForeignKeysHelper extends AbstractBuilder
             '~foreign_key~' => $foreign_key
         ];
         $name = rtrim(rtrim($alias, 'id'), '_');
-        $name = $short_name;
+        //$name = $short_name;
 
         // Set variables based on type
         if (str_ends_with($type, 'many')) { 
