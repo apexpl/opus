@@ -246,16 +246,17 @@ class ForeignKeysHelper extends AbstractBuilder
         // Get short class name
         $parts = explode("\\", $class_name);
         $short_name = array_pop($parts);
+        $item_alias = preg_replace("/^(.+)\_/", "", rtrim($alias, '_id'));
 
         // Initialize replace
         $replace = [
-            '~get_phrase~' => $this->applyFilter($short_name, 'phrase'),
+            '~get_phrase~' => $this->applyFilter($item_alias, 'phrase'),
             '~short_name~' => $short_name,
             '~name~' => $alias,
             '~foreign_key~' => $foreign_key
         ];
         $name = rtrim(rtrim($alias, 'id'), '_');
-        //$name = $short_name;
+        $name = $short_name;
 
         // Set variables based on type
         if (str_ends_with($type, 'many')) { 
