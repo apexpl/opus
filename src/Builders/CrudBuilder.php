@@ -43,7 +43,7 @@ class CrudBuilder extends AbstractBuilder
         $pkg_alias = $parts[1] ?? '';
 
         // Table to properties
-        $props = $this->db_helper->tableToProperties($dbtable);
+        $props = $this->db_helper->tableToProperties($dbtable, dirname("$rootdir/$filename"));
 
         // Generate needed code
         $view = '/' . trim($view, '/');

@@ -264,6 +264,28 @@
 
 
 /**
+ <s:nav_menu>
+ *
+ * Navigation menu
+ */
+
+[[nav.header]]
+<li><h3>~name~</li>
+
+
+[[nav.parent]]
+<li>
+    <a href="~url~">~icon~ ~name~</a>
+    <ul>
+        ~submenus~
+    </ul>
+</li>
+
+[[nav.menu]]
+<li><a href="~url~">~icon~~name~</a></li>
+
+
+/**
  * <s:tab_control> .. </s:tab_control>
  *
  * Within the templates, the inner body will contain <s:tab_page> .. </s:tab_page> tags which are 
@@ -379,6 +401,41 @@ active
 [[pagination.active_item]]
 <li class="active"><a>~page~</a></li>
 
+********************
+* <a:dropdown_alerts>
+* <a:dropdown_messages>
+*
+* The list items used for the two drop down lists, notifications / alerts and 
+* messages.  These are generally displayed in the top right corner 
+* of admin panel / member area themes.
+********************
+
+
+[[dropdown.alert]]
+<li class="media">
+    <div class="media-body">
+        <a href="~url~">~message~
+        <div class="text-muted font-size-sm">~time~</div>
+	</a>
+    </div>
+</li>
+
+
+[[dropdown.message]]
+<li class="media">
+    <div class="media-body">
+
+        <div class="media-title">
+            <a href="~url~">
+                <span class="font-weight-semibold">~from~</span>
+                <span class="text-muted float-right font-size-sm">~time~</span>
+            </a>
+        </div>
+
+        <span class="text-muted">~message~</span>
+    </div>
+</li>
+
 
 /**
  * <a:breadcrumbs>
@@ -435,5 +492,81 @@ active
   gtag('config', '~tag_id~');
 </script>
 
+
+/**
+ * <s:boxlist>
+ */
+
+[[boxlist]]
+<ul class="boxlist">
+    ~items~
+</ul>
+
+
+
+[[boxlist.item]]
+<li>
+    <a href="~href~">
+        <b>~title~</b><br />
+        ~contents~
+    </a>
+</li>
+
+
+********************
+* dashboard
+*
+* HTML snippets for the dashboard widgets.
+********************
+
+[[dashboard]]
+
+<div class="row boxgraf index-panel">
+    ~top_items~
+</div>
+
+<div class="panel panel-flat">
+    ~tabcontrol~
+</div>
+
+<div class="sidebar sidebar-light bg-transparent sidebar-component sidebar-component-right border-0 shadow-0 order-1 order-md-2 sidebar-expand-md">
+    <div class="sidebar-content">
+        ~right_items~
+    </div>
+</div>
+
+[[dashboard.top_item]]
+<div class="col-lg-4">
+    <div class="~panel_class~">
+        <div class="panel-body">
+
+            <h3 class="no-margin">~contents~</h3>
+                ~title~
+            </div>
+            <div class="text-muted text-size-small">~contents~</div>
+        </div>
+        <div class="container-fluid">
+            <div id="~divid~"></div>
+        </div>
+</div>
+
+
+
+
+[[dashboard.right_item]]
+<div class="card">
+    <div class="card-header bg-transparent header-elements-inline">
+        <span class="card-title font-weight-semibold">~title~</span>
+    </div>
+    <div class="card-body">
+        <ul class="media-list">
+            <li class="media">
+                <div class="media-body">
+                    ~contents~
+                </div>
+            </li>
+        </ul>
+    </div>
+</div>
 
 
