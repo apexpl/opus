@@ -38,7 +38,7 @@ class ForeignKeysHelper extends AbstractBuilder
     /**
      * Apply foreign keys
      */
-    public function apply(string $code, string $dbtable, string $dirname, bool $with_magic, array $props):string
+    public function apply(string $code, string $dbtable, string $dirname, bool $with_magic, array $props, bool $auto_confirm = false):string
     {
 
         // Initialize
@@ -46,11 +46,11 @@ class ForeignKeysHelper extends AbstractBuilder
         ForeignKeysHelper::$queue = [];
 
         // Get keys
-        $keys = $this->getForeignKeys($dbtable, $dirname, $with_magic, $props);
-        $referenced_keys = $this->getReferencedForeignKeys($dbtable, $dirname, $with_magic, $props);
+        $keys = $this->getForeignKeys($dbtable, $dirname, $with_magic, $props, $auto_confirm);
+        $referenced_keys = $this->getReferencedForeignKeys($dbtable, $dirname, $with_magic, $props, $auto_confirm);
 
         // Apply relationships
-        $code = $this->applyRelationships($code, $keys, $referenced_keys);
+        $code = $this->applyRelationships($code, $keys, $referenced_keys, $auto_confirm);
         $code = str_replace('~use_declarations~', $this->use_declarations, $code);
 
         // Return
@@ -60,7 +60,7 @@ class ForeignKeysHelper extends AbstractBuilder
     /**
      * Get foreign keys
      */
-    private function getForeignKeys(string $dbtable, string $dirname, bool $with_magic, array $props):array
+    private function getForeignKeys(string $dbtable, string $dirname, bool $with_magic, array $props, bool $auto_confirm = false):array
     {
 
         // Get foreign keys
@@ -73,7 +73,7 @@ class ForeignKeysHelper extends AbstractBuilder
             if (!$class_name = $this->tableToClassName($vars['table'], $dirname)) { 
 
                 // Check for creation of new class
-                if (!$class_name = $this->generateClass($vars['table'], $dirname, $with_magic)) {
+                if (!$class_name = $this->generateClass($vars['table'], $dirname, $with_magic, $auto_confirm)) {
                     unset($keys[$column]);
                     continue;
                 }
@@ -90,7 +90,7 @@ class ForeignKeysHelper extends AbstractBuilder
     /**
      * Get referenced foreign keys
      */
-    private function getReferencedForeignKeys(string $dbtable, string $dirname, bool $with_magic, array $props):array
+    private function getReferencedForeignKeys(string $dbtable, string $dirname, bool $with_magic, array $props, bool $auto_confirm = false):array
     {
 
         // Get foreign keys
@@ -103,7 +103,7 @@ class ForeignKeysHelper extends AbstractBuilder
             if (!$class_name = $this->tableToClassName($vars['ref_table'], $dirname)) { 
 
                 // Check for creation of new class
-                if (!$class_name = $this->generateClass($vars['ref_table'], $dirname, $with_magic)) { 
+                if (!$class_name = $this->generateClass($vars['ref_table'], $dirname, $with_magic, $auto_confirm)) { 
                     unset($keys[$foreign_key]);
                     continue;
                 }
@@ -161,7 +161,7 @@ class ForeignKeysHelper extends AbstractBuilder
     /**
      * Generate class
      */
-    private function generateClass(string $table_name, string $entity_dir, bool $with_magic):?string
+    private function generateClass(string $table_name, string $entity_dir, bool $with_magic, bool $auto_confirm = false):?string
     {
 
         // Check skipped and created
@@ -172,7 +172,7 @@ class ForeignKeysHelper extends AbstractBuilder
         }
 
         // Confirm creation
-        if (!$this->cli->getConfirm("A foreign key relationship with the table '$table_name' was found, but no model class was found.  Would you like to generate one?", 'y')) { 
+        if ($auto_confirm === false && !$this->cli->getConfirm("A foreign key relationship with the table '$table_name' was found, but no model class was found.  Would you like to generate one?", 'y')) { 
             ForeignKeysHelper::$tbl_skipped[] = $table_name;
             return null;
         }
@@ -184,8 +184,10 @@ class ForeignKeysHelper extends AbstractBuilder
         $filename = str_replace(SITE_PATH . '/src/', '', "$entity_dir/$filename");
 
         // Confirm filename
-        $this->cli->send("Please enter the filepath relative to the /src/ directory where you would like the new model class for '$table_name' saved.  Leave blank and press enter to accept the default value provided.\r\n\r\n");
-        $filename = $this->cli->getInput("Filepath of Model [$filename]: ", $filename);
+        if ($auto_confirm === false) {
+            $this->cli->send("Please enter the filepath relative to the /src/ directory where you would like the new model class for '$table_name' saved.  Leave blank and press enter to accept the default value provided.\r\n\r\n");
+            $filename = $this->cli->getInput("Filepath of Model [$filename]: ", $filename);
+        }
         $filename = $this->opus_helper->parseFilename($filename);
 
         // Add to queue
@@ -200,7 +202,7 @@ class ForeignKeysHelper extends AbstractBuilder
     /**
      * Apply foreign keys
      */
-    private function applyRelationships(string $code, array $keys, array $referenced_keys):string
+    private function applyRelationships(string $code, array $keys, array $referenced_keys, bool $auto_confirm = false):string
     {
 
         // Check for code tags
@@ -214,24 +216,29 @@ class ForeignKeysHelper extends AbstractBuilder
             if (str_ends_with($vars['type'], 'many')) {
                 $foreign_key = $vars['table'] . '.' . $vars['column'];
                 $many_code .= $this->generateCode($many_match[1], $vars['table'], $vars['class_name'], $vars['type'], $foreign_key);
-            } else {
+            } elseif (isset($one_match[1])) {
                 $one_code .= $this->generateCode($one_match[1], $alias, $vars['class_name'], $vars['type']);
             }
         }
 
-        // Go through refereced keys
+        // Go through referenced keys
         foreach ($referenced_keys as $foreign_key => $vars) { 
 
-            if (str_ends_with($vars['type'], 'many')) {
+            if (isset($many_match[1])) {
                 $many_code .= $this->generateCode($many_match[1], $vars['ref_table'], $vars['class_name'], $vars['type'], $foreign_key);
-            } else {
+            } else if (isset($one_match[1])) {
                 $one_code .= $this->generateCode($one_match[1], $vars['ref_column'], $vars['class_name'], $vars['type']);
             }
         }
 
         // Replace code
-        $code = str_replace($one_match[0], $one_code, $code);
-        $code = str_replace($many_match[0], $many_code, $code);
+        if (isset($one_match[0])) {
+            $code = str_replace($one_match[0], $one_code, $code);
+        }
+
+        if (isset($many_match[0])) {
+            $code = str_replace($many_match[0], $many_code, $code);
+        }
 
         // Return
         return $code;

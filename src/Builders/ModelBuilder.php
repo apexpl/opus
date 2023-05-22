@@ -28,7 +28,7 @@ class ModelBuilder extends AbstractBuilder
     /**
      * Build
      */
-    public function build(string $filename, string $rootdir, string $dbtable, string $type = 'php8', bool $with_magic = false):array
+    public function build(string $filename, string $rootdir, string $dbtable, string $type = 'php8', bool $with_magic = false, bool $auto_confirm = false):array
     {
 
         // Get namespace
@@ -37,7 +37,7 @@ class ModelBuilder extends AbstractBuilder
         // Get properties
         $props = [];
         if ($dbtable != '') { 
-            $props = $this->db_helper->tableToProperties($dbtable, dirname("$rootdir/$filename"));
+            $props = $this->db_helper->tableToProperties($dbtable, dirname("$rootdir/$filename"), $class_name);
         }
 
         // Get code
@@ -46,14 +46,19 @@ class ModelBuilder extends AbstractBuilder
         }
         $code = file_get_contents(__DIR__ . '/../../skel/codegen/models/' . $type . '.php');
 
+        // Apply foreign keys, if PHP8 type
+        if ($type != 'eloquent') {
+            ForeignKeysHelper::$tbl_created[$dbtable] = $namespace . "\\" . $class_name;
+            $code = $this->foreign_keys_helper->apply($code, $dbtable, dirname("$rootdir/$filename"), $with_magic, $props, $auto_confirm);
+        }
+
+        // Get properties again, if Doctrine
+        if ($type == 'doctrine' && $dbtable  != '') {
+            $props = $this->db_helper->tableToProperties($dbtable, dirname("$rootdir/$filename"), $class_name);
+        }
+
         // Apply properties
         $code = $this->applyProperties($code, $props);
-
-        // Apply foreign keys, if PHP8 type
-        if (str_contains($type, 'php8')) {
-            ForeignKeysHelper::$tbl_created[$dbtable] = $namespace . "\\" . $class_name;
-            $code = $this->foreign_keys_helper->apply($code, $dbtable, dirname("$rootdir/$filename"), $with_magic, $props);
-        }
 
         // Basic replace
         $replace = [
@@ -65,12 +70,15 @@ class ModelBuilder extends AbstractBuilder
         $code = strtr($code, $replace);
 
         // Save file
+        if (!is_dir(dirname("$rootdir/$filename"))) {
+            mkdir(dirname("$rootdir/$filename"), 0755, true);
+        }
         file_put_contents("$rootdir/$filename", $code);
         $this->generated_files[] = $filename;
 
         // Generate any queued models
         foreach (ForeignKeysHelper::$queue as $table_name => $filename) { 
-            $this->build($filename, SITE_PATH, $table_name, 'php8', $with_magic);
+            $this->build($filename, SITE_PATH, $table_name, 'php8', $with_magic, $auto_confirm);
         }
 
         // Return filename

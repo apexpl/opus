@@ -3,18 +3,16 @@ declare(strict_types=1);
 
 namespace ~namespace~;
 
-use Doctrine\ORM\Mapping\{Entity, Table, Column, Id, GeneratedValue, OneToOne, OneToMany, ManyToOne, ManyToMany};
+use Doctrine\ORM\Mapping as ORM;
 use DateTime;
 
-/**
- * @Entity
- * @Table(name="~dbtable~")
- */
+#[ORM\Entity]
+#[ORM\Table(name: '~dbtable~')]
 class ~class_name~
 {
 
 <properties>
-    ~doctrine_annotation~
+~doctrine_attribute~
     private ~null~~type~ $~name~~default~;
 
 </properties>

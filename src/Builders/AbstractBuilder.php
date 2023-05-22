@@ -156,6 +156,7 @@ class AbstractBuilder
         // Get names
         $parts = explode("/", $filename);
         $class_name = array_pop($parts);
+        $class_name = str_replace("-", "_", $class_name);
         $namespace = "App\\" . implode("\\", $parts);
 
         // Return

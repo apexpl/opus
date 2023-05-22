@@ -13,6 +13,7 @@ package:
     - /docs/~alias.title~
   files:
     package/package.yml: /etc/~alias.title~/package.yml
+    package/registry.yml: /etc/~alias.title~/registry.yml
     package/install.sql: /etc/~alias.title~/install.sql
     package/remove.sql: /etc/~alias.title~/remove.sql
     package/reset.sql: /etc/~alias.title~/reset.sql

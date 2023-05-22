@@ -29,7 +29,7 @@ class CrudBuilder extends AbstractBuilder
     /**
      * Build
      */
-    public function build(string $filename, string $dbtable, string $view, bool $with_magic, string $rootdir = ''):array
+    public function build(string $filename, string $dbtable, string $view, bool $with_magic, string $rootdir = '', bool $auto_confirm = false):array
     {
 
         // Get namespace
@@ -37,6 +37,7 @@ class CrudBuilder extends AbstractBuilder
         $alias = $class_name;
         $alias_single = $this->applyFilter($alias, 'single');
         $alias_plural = $this->applyFilter($alias, 'plural');
+        $controller_name = $alias . 'Controller';
 
         // Get package alias
         $parts = explode("\\", $namespace);
@@ -50,7 +51,17 @@ class CrudBuilder extends AbstractBuilder
         $code = $this->generateTableColumns($dbtable, $alias, $view, $props);
 
         // Build model
-        $files = $this->model_builder->build($filename, $rootdir, $dbtable, 'php8', $with_magic);
+        $files = $this->model_builder->build($filename, $rootdir, $dbtable, 'php8', $with_magic, $auto_confirm);
+
+        // Build controller
+        $files[] = $this->buildController($pkg_alias, $controller_name, [
+            'model_name' => $alias_single,
+            'model_namespace' => $namespace,
+            'package' => $pkg_alias,
+            'controller_name' => $controller_name,
+            'insert_code' => $code['insert_code'],
+            'update_code' => $code['update_code']
+        ]);
 
         // Build data table
         list($dirs, $tmp_files) = $this->builder->build('data_table', $rootdir, [
@@ -84,8 +95,7 @@ class CrudBuilder extends AbstractBuilder
             'model_class_name' => $class_name,
             'parent_namespace' => $parent_nm,
             'class_name' => $view_alias,
-            'insert_code' => $code['insert_code'],
-            'update_code' => $code['update_code'],
+            'controller_name' => $controller_name,
             'view_path' => trim($view, '/'),
             'record_id_merge_field' => '~' . $this->applyFilter($alias, 'lower') . '_id~'
         ]);
@@ -128,8 +138,8 @@ class CrudBuilder extends AbstractBuilder
 
             // Add to insert / update code
             if ($vars['type'] != 'DateTime') {
-                $code['insert_code'] .= "                '$alias' => \$app->post('$alias'),\n";
-                $code['update_code'] .= "                '$alias' => \$app->post('$alias'),\n";
+                $code['insert_code'] .= "            '$alias' => \$post['$alias'],\n";
+                $code['update_code'] .= "            '$alias' => \$post['$alias'],\n";
             }
 
             // Skip, if needed
@@ -162,6 +172,32 @@ class CrudBuilder extends AbstractBuilder
 
         // Return
         return $code;
+    }
+
+    /**
+     * Build controller
+     */
+    private function buildController(string $pkg_alias, string $controller_name, array $vars): string
+    {
+
+        // Get code
+        $code = file_get_contents(__DIR__ . '/../../skel/crud/controller.php');
+        $vars['namespace'] = "App\\" . $pkg_alias . "\\Controllers";
+
+        // Replace code
+        foreach ($vars as $key => $value) {
+            $code = str_replace("~$key~", $value, $code);
+        }
+
+        // Save file
+        $filename = '/src/' . $pkg_alias . '/Controllers/' . $controller_name . '.php';
+        if (!is_dir(dirname(SITE_PATH . $filename))) {
+            mkdir(dirname(SITE_PATH . $filename), 0755, true);
+        }
+        file_put_contents(SITE_PATH . $filename, $code);
+
+        // return
+        return $filename;
     }
 
 }

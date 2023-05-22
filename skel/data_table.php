@@ -74,7 +74,7 @@ class ~alias.title~ implements DataTableInterface
 
         // Get rows
         if ($search_term != '') { 
-        $rows = $this->db->query("SELECT * FROM ~dbtable~ WHERE some_column LIKE %ls ORDER BY $order_by LIMIT $start,$this->rows_per_page", $search_term);
+            $rows = $this->db->query("SELECT * FROM ~dbtable~ WHERE some_column LIKE %ls ORDER BY $order_by LIMIT $start,$this->rows_per_page", $search_term);
         } else { 
             $rows = $this->db->query("SELECT * FROM ~dbtable~ ORDER BY $order_by LIMIT $start,$this->rows_per_page");
         }

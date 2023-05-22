@@ -4,7 +4,7 @@ declare(strict_types = 1);
 namespace Views~parent_namespace~;
 
 use Apex\Svc\{View, App};
-use ~model_namespace~\~model_class_name~;
+use App\~package~\Controllers\~controller_name~;
 
 /**
  * Render the template.
@@ -13,33 +13,31 @@ class ~class_name~
 {
 
     /**
-     * Render
+     * Post
      */
-    public function render(View $view, App $app):void
+    public function post(View $view, App $app, ~controller_name~ $controller):void
     {
 
         // Create ~alias_single.lower~
         if ($app->getAction() == 'create') {
 
-            $obj = ~model_class_name~::insert([
-~insert_code~
-            ]);
-
-            // Callout
-            $view->addCallout("Successfully created new ~alias_single.phrase~");
+            // Create
+            if (!$obj = $controller->create()) {
+                $view->addCallout("Unable to create new ~model_name~");
+            } else {
+                $view->addCallout("Successfully created new ~alias_single.phrase~");
+        }
 
         // Update ~alias_single.lower~
         } elseif ($app->getAction() == 'update') {
 
         // Get model
-            if (!$obj = ~model_class_name~::whereId($app->post('~alias_single.lower~_id'))) {
+            if (!$obj = $controller->get($app->post('~alias_single.lower~_id'))) {
                 throw new \Exception("No record exists with the id#, " . $app->post('~alias_single.lower~_id'));
             }
 
             // Update record
-            $obj->save([
-~update_code~
-            ]);
+            $controller->update($app->post('~alias_single.lower~_id'));
 
             // Add callout
             $view->addCallout("Successfully updated ~alias_single.phrase~");

@@ -16,8 +16,7 @@ class DatabaseHelper
      * Constructor
      */
     public function __construct(
-        private DbInterface $db, 
-        private DoctrineHelper $doctrine_helper
+        private DbInterface $db
     ) { 
 
     }
@@ -25,12 +24,12 @@ class DatabaseHelper
     /**
      * Database table to PHP data types.
      */
-    public function tableToProperties(string $table_name, string $entity_dir = ''):array
+    public function tableToProperties(string $table_name, string $entity_dir = '', string $filename = ''):array
     {
 
         // Get column
         $columns = $this->db->getColumnDetails($table_name);
-        $annotations = $this->doctrine_helper->generateAnnotations($table_name, $entity_dir);
+        $doctrine_attributes = DoctrineHelper::generateAttributes($this->db, $table_name, $entity_dir, $filename);
 
         // Go through columns
         $props = [];
@@ -81,12 +80,10 @@ class DatabaseHelper
                 'type' => $type, 
                 'null' => ($vars['allow_null'] === true || $def == 'null') ? '?' : '', 
                 'default' => $def,
-                'doctrine_annotation' => $annotations[$alias] ?? ''
+                'doctrine_attribute' => $doctrine_attributes[$alias] ?? ''
             ];
 
         }
-
-
 
         // Return
         return $props;

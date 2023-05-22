@@ -10,6 +10,7 @@ general:
   description: ~name~
   access: ~access~
   type: ~type~
+  license: MIT
   price: 0
   price_recurring: 0
   price_interval: Y1

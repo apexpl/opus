@@ -1,0 +1,13 @@
+####################
+# Package Registry
+#
+# Contains various items that are global in scope but 
+# registered to this package such as views, HTTP controllers, 
+# and more.
+#
+# This file is generally auto-updated via the 
+# various CLI commands, but may be manually updated as well.
+####################
+
+
+
