@@ -10,10 +10,12 @@ general:
   description: ~name~
   access: ~access~
   type: ~type~
+  category: uncategorized
   license: MIT
   price: 0
   price_recurring: 0
   price_interval: Y1
+  allow_num_installs: 3
 
 ####################
 # ACL controls for repository
