@@ -19,6 +19,7 @@ package:
     package/reset.sql: /etc/~alias.title~/reset.sql
     package/migrate.php: /etc/~alias.title~/migrate.php
     package/Readme.md: /docs/~alias.title~/Readme.md
+    package/sales.md: /docs/~alias.title~/sales.md
 
 install_image:
   dirs:
