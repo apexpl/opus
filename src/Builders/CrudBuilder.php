@@ -51,7 +51,10 @@ class CrudBuilder extends AbstractBuilder
         $code = $this->generateTableColumns($dbtable, $alias, $view, $props);
 
         // Build model
-        $files = $this->model_builder->build($filename, $rootdir, $dbtable, 'php8', $with_magic, $auto_confirm);
+        $files = [];
+        if (!file_exists($filename)) {
+            $files = $this->model_builder->build($filename, $rootdir, $dbtable, 'php8', $with_magic, $auto_confirm);
+        }
 
         // Build controller
         $files[] = $this->buildController($pkg_alias, $controller_name, [
