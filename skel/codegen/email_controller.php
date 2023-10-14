@@ -112,7 +112,7 @@ class ~class_name~ implements EmailNotificationControllerInterface
      * This should return the sender name and e-mail address as a 
      * EmailContact object.  Otherwise, return null.
      */
-    public function getSender(string $sender, UserInterface $user, array $data = []):?EmailContact
+    public function getSender(string $sender, ?UserInterface $user, array $data = []):?EmailContact
     {
         return null;
     }
@@ -124,7 +124,7 @@ class ~class_name~ implements EmailNotificationControllerInterface
      * This should return the recipient name and e-mail address as a 
      * EmailContact object.  Otherwise, return null.
      */
-    public function getRecipients(string $recipient, UserInterface $user, array $data = []):?EmailContactCollection
+    public function getRecipients(string $recipient, ?UserInterface $user, array $data = []):?EmailContactCollection
     {
         return null;
     }
