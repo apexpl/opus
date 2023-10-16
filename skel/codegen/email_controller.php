@@ -7,6 +7,8 @@ use Apex\App\Base\Web\Utils\FormBuilder;
 use Apex\App\Interfaces\EmailNotificationControllerInterface;
 use Apex\App\Interfaces\UserInterface;
 use Apex\Mercury\Email\{EmailContact, EmailContactCollection};
+use Apex\App\Base\Model\ModelIterator;
+use App\Webapp\Models\EmailQueueRecipient;
 
 /**
  * ~alias.title~ E-Mail Notification Controller
@@ -161,8 +163,23 @@ class ~class_name~ implements EmailNotificationControllerInterface
     {
         return null;
     }
+
+    /**
+     * Get broadcast iterator
+     */
+    public function getBroadcastIterator(int $offset, array $condition = []):?ModelIterator
+    {
+        return null;
+    }
+
+    /**
+     * Get broadcast recipient
+     */
+    public function getBroadcastRecipient(object $model):?EmailQueueRecipient
+    {
+        return null;
+    }
+
 }
-
-
 
 
