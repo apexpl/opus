@@ -37,7 +37,7 @@ class FormBuilder extends AbstractBuilder
         $columns = $this->db->getColumnDetails($dbtable);
 
         // Go through columns
-        $code = "    \$form_fields = [\n";
+        $code = "        \$form_fields = [\n";
         foreach ($columns as $alias => $vars) {
 
             // Skip, if needed
@@ -52,6 +52,7 @@ class FormBuilder extends AbstractBuilder
                 $col_type == 'boolean' => 'boolean', 
                 (preg_match("/^(decimal|numeric)/", $col_type) ? true : false) => 'amount',
                 (preg_match("/^(datetime|timestamp)/", $col_type) ? true : false) => 'date', 
+                (preg_match("/text/i", $col_type) ? true : false) => 'textarea',
                 default => 'textbox'
             };
             if ($field == 'date') { continue; }

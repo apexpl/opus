@@ -95,7 +95,9 @@ class ~alias.title~ implements DataTableInterface
     public function formatRow(array $row):array
     {
 
+        // Format row
 ~format_code~
+
         // Return
         return $row;
     }
